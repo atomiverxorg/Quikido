@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 name: Backend CI/CD
 
 on:
@@ -21,3 +22,28 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f k8s/backend-deployment.yaml
+=======
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f k8s/backend-deployment.yaml
+>>>>>>> Stashed changes
