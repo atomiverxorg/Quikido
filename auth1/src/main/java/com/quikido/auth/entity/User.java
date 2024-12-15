@@ -1,4 +1,4 @@
-package com.quikido.auth.model;
+package com.quikido.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,8 +23,19 @@ public class User {
     @Column(nullable = false)
     private String role = "PASSENGER"; // Default role
 
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
