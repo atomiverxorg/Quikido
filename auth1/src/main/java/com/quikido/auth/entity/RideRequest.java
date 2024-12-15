@@ -1,26 +1,27 @@
 package com.quikido.auth.entity;
 
 import com.quikido.auth.model.RideRequestStatus;
-import com.quikido.auth.model.RideStatus;
 import jakarta.persistence.*;
+
+
 import java.time.LocalDateTime;
 
 @Entity
-public class Ride {
+public class RideRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String passengerEmail;
     private String driverEmail;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private static double fare;
 
     @Enumerated(EnumType.STRING)
-    private RideStatus status;
+    private RideRequestStatus status;
+
+    private LocalDateTime requestTime;
 
     // Getters and Setters
+
 
     public String getPassengerEmail() {
         return passengerEmail;
@@ -30,20 +31,12 @@ public class Ride {
         return driverEmail;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public double getFare() {
-        return fare;
-    }
-
-    public RideStatus getStatus() {
+    public RideRequestStatus getStatus() {
         return status;
+    }
+
+    public LocalDateTime getRequestTime() {
+        return requestTime;
     }
 
     public void setPassengerEmail(String passengerEmail) {
@@ -54,20 +47,11 @@ public class Ride {
         this.driverEmail = driverEmail;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setFare(double fare) {
-        this.fare = fare;
-    }
-
-    public void setStatus(RideStatus status) {
+    public void setStatus(RideRequestStatus status) {
         this.status = status;
     }
 
+    public void setRequestTime(LocalDateTime requestTime) {
+        this.requestTime = requestTime;
+    }
 }
