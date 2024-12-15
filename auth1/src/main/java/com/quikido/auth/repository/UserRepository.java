@@ -3,7 +3,7 @@ package com.quikido.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.quikido.auth.model.User;
+import com.quikido.auth.entity.User;
 
 import java.util.Optional;
 
