@@ -2,10 +2,12 @@ package com.quikido.auth.utils;
 
 import com.quikido.auth.model.Role;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RoleUtil {
     public boolean hasRole(HttpServletRequest request, Role requiredRole) {
         String role = (String) request.getAttribute("role");
-        return requiredRole.name().equals(role);
+        return !requiredRole.name().equals(role);
     }
 }
