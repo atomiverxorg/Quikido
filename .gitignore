@@ -17,5 +17,5 @@ buildNumber.properties
 .classpath
 /.metadata/
 /.idea/**
-/auth1/**
+/auth1/src/main/gen/**
 
