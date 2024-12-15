@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.quikido.auth.entity.User;
+import com.quikido.auth.model.Role;
 import com.quikido.auth.repository.UserRepository;
 
 import java.util.Optional;
@@ -39,7 +40,19 @@ public class UserService {
 
 
 
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+    }
+    public User registerUser(String name, String email, String password, Role role){
+        if(userRepository.findByEmail(email).isPresent()){
+            throw new RuntimeException("User already exists");
+        }
+
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(role);
+        return userRepository.save(user);
     }
 
 }
