@@ -4,7 +4,6 @@ package com.quikido.auth.controller;
 import com.quikido.auth.model.Role;
 import com.quikido.auth.utils.RoleUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.Realm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +53,7 @@ public class UserController {
     @GetMapping("/driver/details")
     public ResponseEntity<String> getDriverDetails(HttpServletRequest request) {
 
-        if (!roleUtil.hasRole(request, Role.DRIVER)){
+        if (roleUtil.hasRole(request, Role.DRIVER)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
         }
         return ResponseEntity.ok("Driver details accessed successfully");
@@ -62,7 +61,7 @@ public class UserController {
 
     @GetMapping("/admin/reports")
     public ResponseEntity<String> getAdminReports(HttpServletRequest request) {
-        if (!roleUtil.hasRole(request, Role.ADMIN)){
+        if (roleUtil.hasRole(request, Role.ADMIN)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
         }
         return ResponseEntity.ok("Admin reports accessed successfully");
