@@ -6,4 +6,7 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
     public void notifyDriver(String email, String newRideRequest) {
     }
+
+    public void notifyPassenger(String passengerEmail, String s) {
+    }
 }
