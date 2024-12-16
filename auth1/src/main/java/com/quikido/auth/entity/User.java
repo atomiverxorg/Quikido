@@ -32,6 +32,11 @@ public class User {
 
     private String referralCode;
 
+    private String DeviceToken;
+
+    @ManyToOne
+    private Wallet wallet;
+
     public String getEmail() {
         return email;
     }
@@ -55,6 +60,7 @@ public class User {
     public String getReferralCode() {
         return referralCode;
     }
+
 
     public void setEmail(String email) {
         this.email = email;
@@ -81,6 +87,22 @@ public class User {
     }
 
     public Wallet getWallet() {
-        return null;
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public String getDeviceToken() {
+        return DeviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        DeviceToken = deviceToken;
     }
 }

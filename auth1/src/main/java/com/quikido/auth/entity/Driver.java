@@ -24,7 +24,7 @@ public class Driver {
 
     private double currentLatitude;
     private double currentLongitude;
-
+    public String deviceToken;
     // Getters and Setters
 
     public String getEmail() {
@@ -57,5 +57,13 @@ public class Driver {
 
     public void setCurrentLongitude(double currentLongitude) {
         this.currentLongitude = currentLongitude;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }
