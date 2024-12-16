@@ -30,6 +30,8 @@ public class User {
 
     private boolean status = true; // Active by default
 
+    private String referralCode;
+
     public String getEmail() {
         return email;
     }
@@ -50,6 +52,10 @@ public class User {
         return status;
     }
 
+    public String getReferralCode() {
+        return referralCode;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -68,5 +74,13 @@ public class User {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
+    }
+
+    public Wallet getWallet() {
+        return null;
     }
 }
