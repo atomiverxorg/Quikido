@@ -1,6 +1,5 @@
 package com.quikido.auth.entity;
 
-import com.quikido.auth.model.RideRequestStatus;
 import com.quikido.auth.model.RideStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
