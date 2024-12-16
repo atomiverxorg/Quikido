@@ -16,9 +16,20 @@ public class Ride {
     private LocalDateTime endTime;
     private static double fare;
 
+    @ManyToOne
+    private Wallet passenger;
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
+    private boolean cancelable;
+
+    public Wallet getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(Wallet passenger) {
+        this.passenger = passenger;
+    }
     // Getters and Setters
 
     public String getPassengerEmail() {
@@ -69,4 +80,11 @@ public class Ride {
         this.status = status;
     }
 
+    public boolean isCancelable() {
+        return cancelable;
+    }
+
+    public void setCancelable(boolean cancelable) {
+        this.cancelable = cancelable;
+    }
 }

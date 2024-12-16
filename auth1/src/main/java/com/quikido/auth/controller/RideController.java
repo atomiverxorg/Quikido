@@ -3,15 +3,19 @@ package com.quikido.auth.controller;
 import com.quikido.auth.dto.RideRequestDTO;
 import com.quikido.auth.dto.ScheduledRideDTO;
 import com.quikido.auth.entity.Driver;
+import com.quikido.auth.entity.Ride;
 import com.quikido.auth.entity.RideRequest;
 import com.quikido.auth.model.RideRequestStatus;
 import com.quikido.auth.entity.ScheduledRide;
+import com.quikido.auth.model.RideStatus;
+import com.quikido.auth.repository.RideRepository;
 import com.quikido.auth.repository.RideRequestRepository;
 import com.quikido.auth.repository.ScheduledRideRepository;
 import com.quikido.auth.security.JwtUtil;
 import com.quikido.auth.service.DriverMatchingService;
 import com.quikido.auth.service.DriverService;
 import com.quikido.auth.service.NotificationService;
+import com.quikido.auth.service.WalletService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +46,12 @@ public class RideController {
 
     @Autowired
     DriverService driverService;
+
+    @Autowired
+    RideRepository rideRepository;
+
+    @Autowired
+    private WalletService walletService;
 
     @PostMapping("/rides/request")
     public ResponseEntity<String> requestRide(@RequestBody RideRequestDTO request) {
@@ -101,5 +111,30 @@ public class RideController {
 
         scheduledRideRepository.save(scheduledRide);
         return ResponseEntity.ok("Ride scheduled successfully");
+    }
+
+    @PostMapping("/{rideId}/cancel")
+    public ResponseEntity<?> cancelRide(@PathVariable Long rideId, @RequestParam boolean isUserInitiated) {
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() -> new RuntimeException("Ride not found"));
+
+        if (!ride.isCancelable()) {
+            return ResponseEntity.badRequest().body("Ride cannot be canceled.");
+        }
+
+        double refundAmount = calculateRefundAmount(ride, isUserInitiated);
+        walletService.processRefund(ride.getPassenger().getUser(), refundAmount, "Ride #" + rideId);
+
+        ride.setStatus(RideStatus.CANCELED);
+        rideRepository.save(ride);
+
+        return ResponseEntity.ok("Ride canceled and refund processed.");
+    }
+
+    private double calculateRefundAmount(Ride ride, boolean isUserInitiated) {
+        if (isUserInitiated && ride.getStartTime().isBefore(LocalDateTime.now().minusMinutes(5))) {
+            return ride.getFare() * 0.50; // 50% refund for late cancellations
+        }
+        return ride.getFare(); // Full refund otherwise
     }
 }
