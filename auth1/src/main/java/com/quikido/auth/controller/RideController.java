@@ -1,10 +1,13 @@
 package com.quikido.auth.controller;
 
 import com.quikido.auth.dto.RideRequestDTO;
+import com.quikido.auth.dto.ScheduledRideDTO;
 import com.quikido.auth.entity.Driver;
 import com.quikido.auth.entity.RideRequest;
 import com.quikido.auth.model.RideRequestStatus;
+import com.quikido.auth.entity.ScheduledRide;
 import com.quikido.auth.repository.RideRequestRepository;
+import com.quikido.auth.repository.ScheduledRideRepository;
 import com.quikido.auth.security.JwtUtil;
 import com.quikido.auth.service.DriverMatchingService;
 import com.quikido.auth.service.DriverService;
@@ -27,6 +30,9 @@ public class RideController {
 
     @Autowired
     RideRequestRepository rideRequestRepository;
+
+    @Autowired
+    ScheduledRideRepository scheduledRideRepository;
 
     @Autowired
     JwtUtil jwtUtil;
@@ -79,5 +85,21 @@ public class RideController {
             rideRequest.setStatus(RideRequestStatus.REJECTED);
             return ResponseEntity.ok("Ride rejected");
         }
+    }
+    @PostMapping("/rides/schedule")
+    public ResponseEntity<String> scheduleRide(@RequestBody ScheduledRide rideRequest) {
+        if (rideRequest.getScheduledTime().isBefore(LocalDateTime.now().plusMinutes(15))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Scheduled time must be at least 15 minutes in the future");
+        }
+
+        ScheduledRide scheduledRide = new ScheduledRide();
+        scheduledRide.setPassengerEmail(rideRequest.getPassengerEmail());
+        scheduledRide.setPickupLatitude(rideRequest.getPickupLatitude());
+        scheduledRide.setPickupLongitude(rideRequest.getPickupLongitude());
+        scheduledRide.setScheduledTime(rideRequest.getScheduledTime());
+        scheduledRide.setDriverEmail(rideRequest.getDriverEmail());
+
+        scheduledRideRepository.save(scheduledRide);
+        return ResponseEntity.ok("Ride scheduled successfully");
     }
 }
