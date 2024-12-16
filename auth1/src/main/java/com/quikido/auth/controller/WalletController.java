@@ -2,11 +2,15 @@ package com.quikido.auth.controller;
 
 import com.quikido.auth.dto.PaymentCallback;
 import com.quikido.auth.entity.User;
+import com.quikido.auth.entity.WalletTransaction;
+import com.quikido.auth.repository.WalletTransactionRepository;
 import com.quikido.auth.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/wallet")
@@ -14,6 +18,9 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private WalletTransactionRepository walletTransactionRepository;
 
     @GetMapping
     public ResponseEntity<?> getWallet(@AuthenticationPrincipal User user) {
@@ -38,5 +45,9 @@ public class WalletController {
         walletService.addFunds(payload.getUser(), payload.getAmount());
         return ResponseEntity.ok("Payment successful");
     }
-
+    @GetMapping("/transactions")
+    public ResponseEntity<?> getTransactions(@RequestParam Long userId) {
+        List<WalletTransaction> transactions = walletTransactionRepository.findByUserId(userId);
+        return ResponseEntity.ok(transactions);
+    }
 }
