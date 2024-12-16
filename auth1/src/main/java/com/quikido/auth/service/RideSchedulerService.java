@@ -1,6 +1,9 @@
 package com.quikido.auth.service;
 
+import com.quikido.auth.dto.RouteDetails;
+import com.quikido.auth.entity.ActiveRide;
 import com.quikido.auth.entity.ScheduledRide;
+import com.quikido.auth.repository.ActiveRideRepository;
 import com.quikido.auth.repository.ScheduledRideRepository;
 import com.quikido.auth.entity.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,12 @@ public class RideSchedulerService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private ActiveRideRepository rideRepository;
+
+    @Autowired
+    private RouteService routeService;
 
     @Scheduled(fixedRate = 60000) // Runs every minute
     public void allocateScheduledRides() {
@@ -42,4 +51,25 @@ public class RideSchedulerService {
             }
         }
     }
+    @Scheduled(fixedRate = 300000) // Check every 5 minutes
+    public void updateRoutesForActiveRides() {
+        List<ActiveRide> activeRides = rideRepository.findActiveRides();
+
+        for (ActiveRide ride : activeRides) {
+            RouteDetails newRoute = routeService.getOptimizedRoute(
+                    ride.getCurrentLatitude(),
+                    ride.getCurrentLongitude(),
+                    ride.getDropLatitude(),
+                    ride.getDropLongitude()
+            );
+
+            // Update the driver app with new route data
+            notificationService.notifyDriver(
+                    ride.getDriverEmail(),
+                    "Route updated: " + newRoute.getDuration()
+            );
+        }
+    }
+
+
 }
